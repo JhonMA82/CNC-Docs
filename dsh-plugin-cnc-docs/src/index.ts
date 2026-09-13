@@ -1,14 +1,50 @@
 import type { Context } from '@deepseek-ai/cordis'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import fs from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 export const name = 'cnc-docs-manager'
 export const inject = ['tools', 'systemPrompt'] as const
 
-// Utilidades CNC Docs
-const DOCS_ROOT = 'src/content/docs'
-const CONFIG_PATH = 'astro.config.mjs'
+// Utilidades CNC Docs — rutas absolutas a la raíz del proyecto.
+// El cwd del agente no siempre es la raíz del proyecto, así que la
+// detectamos buscando marcadores (astro.config.mjs + docs) hacia arriba:
+// primero desde el cwd y, si falla, desde la ubicación del plugin.
+function hasProjectMarkers(dir: string): boolean {
+  return (
+    existsSync(path.join(dir, 'astro.config.mjs')) &&
+    existsSync(path.join(dir, 'src', 'content', 'docs'))
+  )
+}
+
+function searchUp(start: string): string | null {
+  let dir = path.resolve(start)
+  while (true) {
+    if (hasProjectMarkers(dir)) return dir
+    const parent = path.dirname(dir)
+    if (parent === dir) return null
+    dir = parent
+  }
+}
+
+function findProjectRoot(): string {
+  return (
+    searchUp(process.cwd()) ??
+    searchUp(path.dirname(fileURLToPath(import.meta.url))) ??
+    process.cwd()
+  )
+}
+
+const PROJECT_ROOT = findProjectRoot()
+const DOCS_ROOT = path.join(PROJECT_ROOT, 'src', 'content', 'docs')
+const CONFIG_PATH = path.join(PROJECT_ROOT, 'astro.config.mjs')
+
+// Ruta mostrable, relativa a la raíz del proyecto (estable en cualquier cwd).
+function show(p: string): string {
+  return path.relative(PROJECT_ROOT, path.isAbsolute(p) ? p : path.join(PROJECT_ROOT, p))
+}
 
 function validateFrontmatter(content: string) {
   const fm = content.match(/^---\n([\s\S]*?)\n---/)
@@ -54,13 +90,13 @@ export function apply(ctx: Context) {
       }
       validateFrontmatter(finalContent)
       await fs.writeFile(filePath, finalContent, 'utf-8')
-      return { path: filePath, created: true }
+      return { path: show(filePath), created: true }
     },
     presentCall: (args) => ({
       card: 'diff',
       title: `Crear doc: ${args.category}/${args.slug}`,
-      diffs: [{ path: `${DOCS_ROOT}/${args.category}/${args.slug}.md`, oldText: null, newText: args.content.slice(0, 2000) }],
-      locations: [{ path: `${DOCS_ROOT}/${args.category}/${args.slug}.md` }]
+      diffs: [{ path: show(path.join(DOCS_ROOT, args.category, `${args.slug}.md`)), oldText: null, newText: args.content.slice(0, 2000) }],
+      locations: [{ path: show(path.join(DOCS_ROOT, args.category, `${args.slug}.md`)) }]
     }),
   }))
 
@@ -77,11 +113,11 @@ export function apply(ctx: Context) {
       render: (_args, value) => [{ type: 'text', text: `✅ Editado ${value.path}` }],
     },
     async execute(args) {
-      const abs = path.resolve(args.file)
+      const abs = path.resolve(PROJECT_ROOT, args.file)
       await fs.access(abs)
       validateFrontmatter(args.content)
       await fs.writeFile(abs, args.content, 'utf-8')
-      return { path: args.file, edited: true }
+      return { path: show(args.file), edited: true }
     },
     presentCall: (args) => ({
       card: 'diff',
@@ -103,10 +139,10 @@ export function apply(ctx: Context) {
       render: (_args, value) => [{ type: 'text', text: `🗑️ Borrado ${value.path}` }],
     },
     async execute(args) {
-      const abs = path.resolve(args.file)
+      const abs = path.resolve(PROJECT_ROOT, args.file)
       await fs.access(abs)
       await fs.unlink(abs)
-      return { path: args.file, deleted: true }
+      return { path: show(args.file), deleted: true }
     }
   }))
 
@@ -146,8 +182,8 @@ export function apply(ctx: Context) {
     presentCall: (args) => ({
       card: 'generic',
       title: `Nueva categoría: ${args.label}`,
-      content: [{ type: 'text', text: `Directorio: ${DOCS_ROOT}/${args.dir}` }],
-      locations: [{ path: `${DOCS_ROOT}/${args.dir}/index.md` }]
+      content: [{ type: 'text', text: `Directorio: ${show(path.join(DOCS_ROOT, args.dir))}` }],
+      locations: [{ path: show(path.join(DOCS_ROOT, args.dir, 'index.md')) }]
     })
   }))
 
@@ -180,7 +216,7 @@ export function apply(ctx: Context) {
           ok++
         } catch (err: unknown) {
           errors++
-          bad.push(`${fp}: ${err instanceof Error ? err.message : String(err)}`)
+          bad.push(`${show(fp)}: ${err instanceof Error ? err.message : String(err)}`)
         }
       }
       if (errors > 0) throw new Error(`Errores: ${bad.join('\n')}`)
@@ -207,7 +243,7 @@ export function apply(ctx: Context) {
         for (const e of entries) {
           const p = path.join(d, e.name)
           if (e.isDirectory()) await walk(p)
-          else if (e.name.endsWith('.md') || e.name.endsWith('.mdx')) docs.push(path.relative('.', p))
+          else if (e.name.endsWith('.md') || e.name.endsWith('.mdx')) docs.push(show(p))
         }
       }
       await walk(base)
