@@ -1,0 +1,8 @@
+# Overlay para instalar el plugin CNC Docs en tu harness (DSH).
+# Uso puntual (sin tocar tu perfil):
+#   dsh --profile web --patch /home/juan/Documentos/cnc-docs/cordis.patch.cnc-docs.yml
+# Instalación permanente en el perfil web (ya aplicada si ves este archivo registrado):
+#   ver ~/.dsh/profiles/web/cordis.patch.yml
+- insert:
+    - id: cnc-docs-manager
+      name: /home/juan/Documentos/cnc-docs/dsh-plugin-cnc-docs/src/index.ts

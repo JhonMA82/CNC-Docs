@@ -1,0 +1,21 @@
+{
+  "project": "CNC Docs",
+  "docsRoot": "src/content/docs",
+  "defaultAuthor": "CNC Docs Harness",
+  "categories": {
+    "linuxcnc": ["basico", "intermedio", "avanzado"],
+    "hardware": ["mesa", "remora", "printnc"],
+    "future": ["printnc", "grblhal", "fluidnc"]
+  },
+  "deepseek": {
+    "model": "deepseek-chat",
+    "temperature": 0.3,
+    "systemPrompt": "harness/prompts/system-prompt.md"
+  },
+  "githubPages": {
+    "site": "https://jhonma82.github.io",
+    "base": "/CNC-Docs/",
+    "branch": "main",
+    "workflow": ".github/workflows/deploy.yml"
+  }
+}

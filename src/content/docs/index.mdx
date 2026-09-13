@@ -1,0 +1,50 @@
+---
+title: CNC Docs
+description: La guía definitiva en español para dominar LinuxCNC, PrintNC y todo el ecosistema CNC.
+template: splash
+hero:
+  tagline: De cero a 5 ejes. Reescritura original, práctica y directa de LinuxCNC para hobby, taller y profesional.
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Empezar con LinuxCNC
+      link: linuxcnc/basico/01-que-es-linuxcnc/
+      icon: right-arrow
+      variant: primary
+    - text: Ver en GitHub
+      link: https://github.com/jhonjmx/CNC-Docs
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Optimizado para PrintNC v4 y todo lo demás
+
+Esta documentación nació para construir una **PrintNC v4** con **Mesa 7i96S** y **Remora**, pero está diseñada para que la apliques a cualquier máquina: **Router, Plasma, Láser y 5 ejes**.
+
+<CardGrid stagger>
+  <Card title="100% Original" icon="pencil">
+    No es una traducción. Es una reescritura práctica con ejemplos INI/HAL comentados línea por línea, listos para copiar y pegar.
+  </Card>
+  <Card title="Mesa + Remora" icon="setting">
+    Configuraciones reales para Mesa 7i96S / 7i76E y Remora STM32/ESP32 - las dos plataformas que usa el 90% en 2026.
+  </Card>
+  <Card title="Básico → Avanzado" icon="rocket">
+    Ruta estructurada: desde instalar la ISO hasta kinematics, componentes Python y GladeVCP.
+  </Card>
+  <Card title="Harness DeepSeek" icon="open-book">
+    Incluye un harness CLI para que una IA edite, cree, borre y versione docs automáticamente optimizados para Starlight.
+  </Card>
+</CardGrid>
+
+### ¿Qué cubre el 80% de los usuarios?
+
+1.  Instalación ISO LinuxCNC 2.9 + Debian 12 Bookworm
+2.  Latency Test y elección de kernel PREEMPT_RT
+3.  MesaCT y configuración para PrintNC
+4.  INI / HAL - entenderlo de una vez por todas
+5.  Homing, límites, E-Stop y primer jog
+6.  Husillo, THC plasma, láser y herramientas
+
+> Esta web está optimizada para GitHub Pages. Cada push a `main` despliega automáticamente.

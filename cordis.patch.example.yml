@@ -1,0 +1,13 @@
+# Ejemplo de patch para cargar CNC Docs en DeepSeek Harness oficial
+# Uso: pnpm dsh web --patch ./cordis.patch.example.yml
+# Reemplaza /absolute/path con tu path real (usa pwd)
+
+- insert:
+    - id: cnc-docs-manager
+      name: '/absolute/path/to/CNC-Docs/dsh-plugin-cnc-docs/src/index.ts'
+
+# Opcional: overlay de perfil web
+# - replace:
+#     id: web-app
+#     config:
+#       # tu config extra

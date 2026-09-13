@@ -1,0 +1,3 @@
+- insert:
+    - id: cnc-docs-manager
+      name: './src/index.ts'

@@ -1,0 +1,14 @@
+{
+  "name": "@cnc-docs/dsh-plugin-cnc-docs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Plugin oficial DeepSeek Harness para gestionar CNC Docs (Starlight) - crear, editar, borrar, categorías",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-tools": "^0.1.5-rc.2"
+  },
+  "dsh": {
+    "bundle": "cordis.yml"
+  }
+}
