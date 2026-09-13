@@ -56,23 +56,23 @@ export default defineConfig({
               label: 'Avanzado',
               items: [{ autogenerate: { directory: 'linuxcnc/avanzado' } }],
             },
+            {
+              label: 'Hardware',
+              items: [
+                { label: 'Mesa 7i96S / 7i76E', slug: 'hardware/mesa' },
+                { label: 'Remora (STM32 / ESP32)', slug: 'hardware/remora' },
+                { label: 'PrintNC v4', slug: 'hardware/printnc' },
+              ],
+            },
+            {
+              label: 'CAM',
+              items: [{ autogenerate: { directory: 'cam' } }],
+            },
+            {
+              label: 'Glosario',
+              items: [{ autogenerate: { directory: 'glosario' } }],
+            },
           ],
-        },
-        {
-          label: 'Hardware',
-          items: [
-            { label: 'Mesa 7i96S / 7i76E', slug: 'hardware/mesa' },
-            { label: 'Remora (STM32 / ESP32)', slug: 'hardware/remora' },
-            { label: 'PrintNC v4', slug: 'hardware/printnc' },
-          ],
-        },
-        {
-          label: 'CAM / Flujo de trabajo',
-          items: [{ autogenerate: { directory: 'cam' } }],
-        },
-        {
-          label: 'Glosario',
-          items: [{ autogenerate: { directory: 'glosario' } }],
         },
         {
           label: 'Harness DeepSeek',
