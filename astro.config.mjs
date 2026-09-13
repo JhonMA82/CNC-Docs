@@ -42,16 +42,21 @@ export default defineConfig({
           ],
         },
         {
-          label: 'LinuxCNC - Básico',
-          items: [{ autogenerate: { directory: 'linuxcnc/basico' } }],
-        },
-        {
-          label: 'LinuxCNC - Intermedio',
-          items: [{ autogenerate: { directory: 'linuxcnc/intermedio' } }],
-        },
-        {
-          label: 'LinuxCNC - Avanzado',
-          items: [{ autogenerate: { directory: 'linuxcnc/avanzado' } }],
+          label: 'LinuxCNC',
+          items: [
+            {
+              label: 'Básico',
+              items: [{ autogenerate: { directory: 'linuxcnc/basico' } }],
+            },
+            {
+              label: 'Intermedio',
+              items: [{ autogenerate: { directory: 'linuxcnc/intermedio' } }],
+            },
+            {
+              label: 'Avanzado',
+              items: [{ autogenerate: { directory: 'linuxcnc/avanzado' } }],
+            },
+          ],
         },
         {
           label: 'Hardware',
