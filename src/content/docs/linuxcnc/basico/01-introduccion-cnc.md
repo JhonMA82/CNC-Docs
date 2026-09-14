@@ -19,14 +19,9 @@ Toda CNC, desde una pequeña router hasta una fresadora industrial, tiene lo mis
 4. **Controlador:** el "cerebro" que interpreta el G-code y genera los movimientos coordinados. Aquí entra LinuxCNC.
 5. **Programa (G-code):** la receta con cada movimiento y velocidad.
 
-```mermaid
-flowchart LR
-    CAD[Diseño CAD<br/>la geometría] --> CAM[CAM<br/>trayectorias y parámetros]
-    CAM --> GCODE[G-code<br/>lista de movimientos]
-    GCODE --> CTRL[Controlador<br/>p. ej. LinuxCNC]
-    CTRL --> MAQ[Máquina<br/>ejes + herramienta]
-    MAQ --> PIEZA[Pieza real]
-```
+El flujo de datos siempre es el mismo:
+
+**Diseño CAD** (la geometría) → **CAM** (trayectorias y parámetros) → **G-code** (lista de movimientos) → **Controlador** (p. ej. LinuxCNC) → **Máquina** (ejes + herramienta) → **Pieza real**
 
 Ejemplo mínimo de G-code: un cuadrado de 20 x 20 mm a 600 mm/min, con la herramienta a 1 mm de profundidad:
 
