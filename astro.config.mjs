@@ -75,10 +75,6 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Harness DeepSeek',
-          items: [{ autogenerate: { directory: 'harness' } }],
-        },
-        {
           label: 'Roadmap',
           items: [
             { label: 'Futuro: grblHAL', slug: 'roadmap/grblhal' },
