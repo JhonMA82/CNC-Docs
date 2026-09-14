@@ -1,6 +1,6 @@
 ---
 title: 05. Elegir computadora para LinuxCNC
-description: Qué PC sirve para LinuxCNC con Mesa o Remora: requisitos reales, mini PC vs sobremesa vs SBC, red Ethernet, BIOS y latency test.
+description: "Qué PC sirve para LinuxCNC con Mesa o Remora: requisitos reales, mini PC vs sobremesa vs SBC, red Ethernet, BIOS y latency test."
 ---
 
 LinuxCNC no necesita un PC potente. Necesita un **PC puntual**: que ejecute el servo-thread cada 1 ms sin retrasos aunque abras ventanas, muevas el ratón o haya tráfico de red. Eso se llama tiempo real y ya lo viste en el [capítulo 04](./04-como-funciona-linuxcnc).
