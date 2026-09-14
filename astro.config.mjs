@@ -39,6 +39,7 @@ export default defineConfig({
             { label: 'Bienvenido', slug: 'index' },
             { label: 'Introducción', slug: 'guides/introduction' },
             { label: 'Cómo contribuir', slug: 'guides/contribuir' },
+            { label: 'MCP para visuales', slug: 'guides/mcp-visuales' },
           ],
         },
         {
