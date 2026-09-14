@@ -1,6 +1,6 @@
 ---
 title: 02. Anatomía de una CNC
-description: Partes de una CNC explicadas para principiantes: ejes, husillos SFU1605, motores NEMA23, drivers DM556, spindle, VFD y E-stop.
+description: "Partes de una CNC explicadas para principiantes: ejes, husillos SFU1605, motores NEMA23, drivers DM556, spindle, VFD y E-stop."
 ---
 
 Una CNC parece complicada hasta que la divides en bloques. Son siempre los mismos seis: estructura, transmisión, motores, herramienta, control y seguridad. Si entiendes qué hace cada uno, ya sabes dónde mirar cuando algo falla y qué pieza elegir para una PrintNC v4.

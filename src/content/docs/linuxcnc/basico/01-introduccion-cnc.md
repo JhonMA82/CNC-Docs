@@ -25,7 +25,7 @@ El flujo de datos siempre es el mismo:
 
 Ejemplo mínimo de G-code: un cuadrado de 20 x 20 mm a 600 mm/min, con la herramienta a 1 mm de profundidad:
 
-```gcode
+```txt
 G21          (unidades en milímetros)
 G90          (posiciones absolutas: cada X/Y es respecto al cero de pieza)
 G1 Z5 F300   (sube a Z=5 seguro, a 300 mm/min)
