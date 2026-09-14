@@ -265,8 +265,57 @@ Reglas para generar contenido:
 - Siempre frontmatter válido Starlight
 - Si es LinuxCNC: incluye INI/HAL comentado línea por línea listo para copiar/pegar
 - Para PrintNC: valores concretos (160 steps/mm, DM556 2.8A, SFU1605)
-- Usa mermaid para diagramas HAL
+- Diagramas HAL: prefiere draw.io MCP (SVG editable); si MCP no disponible, usa mermaid y deja VISUAL_PENDING para la versión definitiva
 - Añade sección "Hardware aplicable" y "Próximo paso"
+`
+  })
+
+  ctx.systemPrompt.section({
+    name: 'cnc-docs-visual',
+    order: 501,
+    text: `
+Estrategia visual CNC Docs: usa imágenes/diagramas/esquemas solo cuando ayuden a comprender un concepto, procedimiento, conexión, movimiento, arquitectura o problema. Nada decorativo. Antes de crear un visual pregúntate: "¿El lector lo entenderá claramente solo con texto?" Si sí, no generes visual. Si un visual reduce significativamente la complejidad, créalo o deja preparada su generación.
+
+Prioridad de representación (usa lo más simple que resuelva): 1. texto 2. lista/tabla 3. diagrama 4. esquema técnico 5. captura real 6. fotografía/modelo técnico 7. ilustración generada con IA. No conviertas información sencilla en imagen innecesaria.
+
+Visual Decision Router (evalúa cada sección mientras redactas):
+- Diagrama conceptual/arquitectura (flujo CAD→CAM→G-code→controlador, LinuxCNC→HAL→hardware→máquina, PC→Mesa→drivers→motores, EtherCAT, estados de homing, árbol diagnóstico, flujo señales, secuencia funcionamiento): draw.io vía MCP (editable + SVG). Alternativa simple tipo pizarrón: Excalidraw vía MCP.
+- Esquema eléctrico didáctico (fuente-driver-motor, sensores, E-stop, VFD/spindle, Arc OK, contactores, relés, interlocks): draw.io vía MCP con símbolos eléctricos. Explica conexiones pero no lo presentes como plano de ingeniería listo para construir salvo que pase validación técnica.
+- Electrónica real (optoaislado, adaptación 24V→lógica, interfaz sensores, PCB, auxiliares): KiCad vía MCP (conserva esquema/PCB editable + exportación visual). Nunca uses IA para circuitos que deban construirse.
+- Mecánica y montaje (ballscrew, motor+acople+soporte, guías, rack & pinion, pórtico, sensores, alineación, disposición, piezas): FreeCAD vía MCP (modelo editable, iso, sección, plano técnico, SVG, WebP/PNG). Didáctico no exige exactitud dimensional; si hay cotas fabricables deben venir de fuente verificada.
+- Interfaz software (LinuxCNC, QtPlasmaC, QtDragon, FreeCAD CAM, HAL Show, PnCconf, configuradores, diagnóstico): capturas reales + solo anotaciones útiles (flechas, números, recuadros, resaltados). No reconstruyas interfaces con IA. Evita texto largo incrustado.
+- Componente físico (guía, ballscrew, sensor, motor, VFD, driver, placa, herramienta): prioridad 1. doc/CAD oficial fabricante 2. foto con licencia compatible 3. catálogo técnico 4. modelo propio 5. ilustración generada. Prefiere crear vista propia desde CAD antes que copiar foto comercial.
+- Catálogos tipo JLCMC: úsalos para identificar, dimensiones, nomenclatura, variantes, dibujos y CAD 2D/3D como referencia para ilustraciones propias. Flujo preferido: catálogo → modelo CAD → FreeCAD → vista propia → docs. Sin scraping masivo ni reutilización de imágenes comerciales sin licencia clara. Registra siempre la fuente técnica.
+
+Generación con IA: solo contenido didáctico/conceptual (backlash, flexión estructural, evacuación viruta, operación CNC, situación trabajo, comparativa máquinas, fenómeno difícil de fotografiar). PROHIBIDO para: pinouts, cableado, esquemas eléctricos, circuitos, tolerancias, dimensiones, posiciones exactas, interfaces reales, seguridad, geometría fabricable.
+Si puedes generar: 1. prompt técnico específico 2. genera 3. verifica que explique bien 4. evita texto pequeño 5. nombre descriptivo 6. inserta 7. alt descriptivo. No aceptes imagen incorrecta por bonita.
+Si NO puedes generar: no detengas la doc, inserta marcador IMAGE_PENDING con purpose, filename, placement y prompt autocontenido. Ejemplo:
+<!-- IMAGE_PENDING
+purpose: Explicar backlash en eje CNC.
+filename: backlash-explicado.webp
+placement: Después de la explicación inicial de backlash.
+prompt: Ilustración técnica educativa de eje CNC con ballscrew, dos estados y movimiento perdido al invertir dirección. Vista lateral limpia, estilo didáctico, fondo neutro, sin texto decorativo, sin dimensiones inventadas.
+-->
+
+Si el visual requiere MCP no disponible en la sesión: no improvises versión inferior, deja VISUAL_PENDING específico:
+<!-- VISUAL_PENDING
+type: diagram | schematic | mechanical
+tool: drawio | freecad | kicad | excalidraw
+purpose: Qué debe mostrar (ej. flujo PC→Mesa→drivers→motores con feedback encoder).
+filename: mesa-motion-control.svg
+reference: (solo mecánica/electrónica) modelo CAD o fuente verificada.
+-->
+
+Estados de trabajo (regla interna, no metadata obligatoria): VISUAL_REQUIRED (falta y es necesario), VISUAL_CREATED (integrado), VISUAL_VERIFIED (contrastado con fuente técnica).
+Verificación técnica obligatoria para todo visual verificable (electricidad, electrónica, seguridad, pinouts, conexiones, dimensiones, tolerancias, hardware, mecanismos, movimientos, secuencias). Si es solo conceptual y hay riesgo de confusión, indica "representación simplificada".
+
+Fuente editable y publicación: conserva .drawio, Excalidraw, .FCStd, proyecto KiCad, SVG fuente. Publica SVG para diagramas, WebP/PNG para renders/fotos. No dependas solo de raster si necesitará correcciones.
+Archivos: respeta estructura existente del proyecto; si no hay convención usa src/assets/docs/{diagrams,schematics,mechanics,screenshots,photos,illustrations} sin subdirectorios excesivos; si el proyecto pone assets junto al tema, consérvalo. Nombres kebab-case minúsculas descriptivos (ej. mesa-step-dir-feedback.svg, ballscrew-fixed-floating-support.webp, qtplasmac-thc-panel.webp). Nada de image1.png.
+Accesibilidad: toda imagen con alt útil que describa lo que comunica (ej. "Flujo de señales desde LinuxCNC hacia Mesa, drivers y motores, con retorno de encoders"), no genéricos tipo "Imagen del esquema" ni duplicar todo el texto circundante. Minimiza texto incrustado: etiquetas cortas, números, nombres técnicos, flechas; explicaciones largas en Markdown.
+Consistencia: diagramas limpios, pocos elementos, jerarquía clara, color solo con significado, símbolos y flechas consistentes. No infografías decorativas.
+Diagnóstico con múltiples causas: considera árbol de diagnóstico en texto y, si mejora lectura y hay draw.io MCP, conviértelo a SVG editable.
+No fuerces cuota de imágenes: unas páginas necesitan cero, otras varias. Normalmente NO necesitan imagen: sintaxis comando, tabla códigos, definición corta, parámetro simple. Normalmente SÍ aportan: movimientos, coordenadas, backlash, cableado, flujo señales, arquitectura, mecánica, montaje, diagnóstico, interfaces.
+Regla final: el visual existe para que el lector entienda más rápido, cometa menos errores, identifique componentes, comprenda conexiones, visualice movimientos, diagnostique y ejecute con más seguridad. Si no mejora alguno de esos puntos, no lo crees.
 `
   })
 
